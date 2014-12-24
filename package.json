@@ -1,0 +1,23 @@
+{
+  "name": "mandlebrot",
+  "version": "1.0.0",
+  "description": "GPU accelerated mandlebrot set rendering",
+  "main": "server.js",
+  "scripts": {
+    "test": "node tests.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/stevekane/mandlebrot.git"
+  },
+  "keywords": [
+    "mandlebrot",
+    "webgl"
+  ],
+  "author": "Steve Kane",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stevekane/mandlebrot/issues"
+  },
+  "homepage": "https://github.com/stevekane/mandlebrot"
+}
