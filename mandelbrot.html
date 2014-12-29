@@ -4,6 +4,9 @@
   <link rel="stylesheet" type="text/css" href="/styles.css" />
 </head>
 <body>
+  <img style="display: none;" id="gradient" src="/tex.png" />
+  <h1 class="floating" id="title"></h1>
+
   <script type="x-shader" id="vShader">
     precision highp float;
 
@@ -17,18 +20,19 @@
   <script type="x-shader" id="fShader">
     precision highp float;
 
+    uniform sampler2D u_image;
     uniform vec2 center;
+    uniform vec2 screenSize;
     uniform float scale;
 
     void main () {
-      vec2 z, c;
-
-      c.x = 1.3333 * (gl_FragCoord.x - 0.5) * scale - center.x;
-      c.y = (gl_FragCoord.y - 0.5) * scale - center.y;
+      vec2 texCoord = vec2(gl_FragCoord.xy / screenSize - 0.5);
+      vec2 c        = scale * texCoord + center;
+      vec2 z;
 
       int j = 0;
       z = c;
-      for (int i = 0; i < 100; i++ ) {
+      for ( int i = 0; i < 100; i++ ) {
         float x = (z.x * z.x - z.y * z.y) + c.x;
         float y = (z.y * z.x + z.x * z.y) + c.y;
 
@@ -38,9 +42,9 @@
         z.y = y;
       }
 
-      float color = j == 100 ? 0.0 : (float(j) / 100.0);
+      float mult = j == 100 ? 0.0 : (float(j) / 100.0);
 
-      gl_FragColor = vec4(color, color, 0.3, 1.0);
+      gl_FragColor = texture2D(u_image, vec2(mult, 1.0)).bgra;
     }
   </script>
 
