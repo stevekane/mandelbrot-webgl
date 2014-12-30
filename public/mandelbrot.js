@@ -21,9 +21,18 @@ function Location (x, y, scale, name) {
   this.name  = name
 }
 
+function copy (obj) {
+  var c = {}
+
+  Object.keys(obj).forEach(function (key) {
+    c[key] = obj[key] 
+  })
+  return c
+}
+
 function Scope (initialLocation) {
-  this.location = initialLocation
-  this.target   = initialLocation
+  this.location = copy(initialLocation)
+  this.target = initialLocation
 
   Object.defineProperty(this, "scaleDiff", {
     get: function () { return this.target.scale - this.location.scale }
@@ -48,18 +57,44 @@ var locations = {
     0.3808247882043751,
     5.634342535442616e-2,
     "MiniBrot"
+  ),
+  spirals: new Location(
+    0.28693186889504513,
+    0.014286693904085048,
+    10e-5,
+    "Spirals"
   )
 }
 
 var scope = new Scope(locations.base)
 
-scope.target = locations.minibrot
+var frames = [
+  new Frame(2000, locations.base),
+  new Frame(5000, locations.minibrot),
+  new Frame(2000, locations.base),
+  new Frame(5000, locations.spirals)
+]
+
+var timeline = new Timeline(frames)
 
 function makeUpdate () {
+  var newTime = Date.now()
+  var oldTime = newTime
+  var dT      = newTime - oldTime
+  var scaleFactor = .05
+
+
   return function update () {
-    scope.location.scale += scope.scaleDiff * .1
-    scope.location.x     += scope.xDiff * .1
-    scope.location.y     += scope.yDiff * .1
+    oldTime = newTime
+    newTime = Date.now()
+    dT      = newTime - oldTime
+          
+    updateTimeline(dT, timeline)
+    scope.target = timeline.currentFrame.data
+    
+    scope.location.scale += scope.scaleDiff * scaleFactor
+    scope.location.x     += scope.xDiff * scaleFactor
+    scope.location.y     += scope.yDiff * scaleFactor
   }
 }
 

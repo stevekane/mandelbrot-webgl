@@ -44,11 +44,12 @@
 
       float mult = j == 100 ? 0.0 : (float(j) / 100.0);
 
-      gl_FragColor = texture2D(u_image, vec2(mult, 1.0)).bgra;
+      gl_FragColor = texture2D(u_image, vec2(mult, 1.0));
     }
   </script>
 
   <canvas id="view"></canvas>
   <script type="text/javascript" src="/gl-utils.js"></script>
+  <script type="text/javascript" src="/timeline.js"></script>
   <script type="text/javascript" src="/mandelbrot.js"></script>
 </body>
