@@ -6,6 +6,13 @@
 <body>
   <img style="display: none;" id="gradient" src="/tex.png" />
   <h1 class="floating" id="title"></h1>
+  <ul class="floating" id="todo">
+    <li><strike>Move matrices to CPU</strike></li>
+    <li><strike>Support full screen resolution</strike></li>
+    <li>Support easing functions</li>
+    <li>Add more preset locations</li>
+    <li>Add region indicator and label</li>
+  </ul>
 
   <script type="x-shader" id="vShader">
     precision highp float;
@@ -21,14 +28,32 @@
     precision highp float;
 
     uniform sampler2D u_image;
-    uniform vec2 center;
     uniform vec2 screenSize;
-    uniform float scale;
+    uniform mat3 zoomScale;
+    uniform mat3 rotation;
+    uniform mat3 center;
 
     void main () {
-      vec2 texCoord = vec2(gl_FragCoord.xy / screenSize - 0.5);
-      vec2 c        = scale * texCoord + center;
-      vec2 z;
+      float xyRatio = screenSize.x / screenSize.y;
+
+      mat3 fragScale = mat3(
+        1.0 / screenSize.y , 0                 , 0,
+        0                  , 1.0 / screenSize.y, 0,
+        0                  , 0                 , 1.0
+      );
+      mat3 clipTranslation = mat3(
+        1             ,    0, 0,
+        0             ,    1, 0,
+        -0.5 * xyRatio, -0.5, 1
+      );
+      vec3 c =
+        center * 
+        zoomScale * 
+        rotation *
+        clipTranslation * 
+        fragScale * 
+        vec3(gl_FragCoord.xy, 1);
+      vec3 z;
 
       int j = 0;
       z = c;

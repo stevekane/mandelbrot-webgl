@@ -34,7 +34,11 @@ body {
   color: white;
 }
 
-#selector {
-  left: 10%;
-  top: 40%;
+#todo {
+  right: 10%;
+  top: 10%;
+  font-family: ‘Palatino Linotype’, ‘Book Antiqua’, Palatino, serif;
+  font-weight: 100;
+  font-size: 32px;
+  color: white;
 }
