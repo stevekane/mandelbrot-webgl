@@ -89,10 +89,24 @@ var locations = {
     Math.PI / 3,
     "MiniBrot"
   ),
+  seahorse: new Location(
+    -0.75, 
+    0.1,
+    .1,
+    Math.PI / 6,
+    "Seahorse Valley"
+  ),
+  scepter: new Location(
+    -1.36,
+    0.005,
+    .1,
+    Math.PI,
+    "Sceptre Valley"
+  ),
   spirals: new Location(
     0.28693186889504513,
     0.014286693904085048,
-    10e-5,
+    10e-4,
     Math.PI,
     "Spirals"
   )
@@ -101,10 +115,30 @@ var locations = {
 var scope = new Scope(locations.base)
 
 var frames = [
-  new Frame(2000, locations.base),
-  new Frame(5000, locations.minibrot),
-  new Frame(2000, locations.base),
-  new Frame(5000, locations.spirals)
+  new Frame(2000, linear, locations.base),
+
+  new Frame(3000, linear, locations.minibrot),
+  new Frame(2000, linear, locations.minibrot),
+
+  new Frame(3000, linear, locations.base),
+  new Frame(2000, linear, locations.base),
+
+  new Frame(3000, linear, locations.seahorse),
+  new Frame(2000, linear, locations.seahorse),
+
+  new Frame(3000, linear, locations.base),
+  new Frame(2000, linear, locations.base),
+
+  new Frame(3000, linear, locations.scepter),
+  new Frame(2000, linear, locations.scepter),
+
+  new Frame(3000, linear, locations.base),
+  new Frame(2000, linear, locations.base),
+  
+  new Frame(3000, linear, locations.spirals),
+  new Frame(2000, linear, locations.spirals),
+
+  new Frame(3000, linear, locations.base)
 ]
 
 var timeline = new Timeline(frames)
@@ -116,17 +150,28 @@ function makeUpdate () {
   var scaleFactor = .05
 
   return function update () {
-    oldTime = newTime
-    newTime = Date.now()
-    dT      = newTime - oldTime
+    var frame
+    var oldFrame
+
+    oldTime  = newTime
+    newTime  = Date.now()
+    dT       = newTime - oldTime
           
     updateTimeline(dT, timeline)
+    frame    = timeline.currentFrame
+    oldFrame = timeline.previousFrame
+
     scope.target = timeline.currentFrame.data
     
-    scope.location.scale += scope.scaleDiff * scaleFactor
-    scope.location.theta += scope.thetaDiff * scaleFactor
-    scope.location.x     += scope.xDiff * scaleFactor
-    scope.location.y     += scope.yDiff * scaleFactor
+    var newScale = tweenTimeline(timeline, oldFrame.data.scale, frame.data.scale)
+    var newTheta = tweenTimeline(timeline, oldFrame.data.theta, frame.data.theta)
+    var newX = tweenTimeline(timeline, oldFrame.data.x, frame.data.x)
+    var newY = tweenTimeline(timeline, oldFrame.data.y, frame.data.y)
+
+    scope.location.scale = newScale
+    scope.location.theta = newTheta
+    scope.location.x     = newX
+    scope.location.y     = newY
   }
 }
 
