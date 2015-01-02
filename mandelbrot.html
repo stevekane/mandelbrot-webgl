@@ -4,8 +4,15 @@
   <link rel="stylesheet" type="text/css" href="/styles.css" />
 </head>
 <body>
-  <img style="display: none;" id="gradient" src="/tex.png" />
-  <h1 class="floating" id="title"></h1>
+  <div class="floating" id="stats">
+    <h1 id="name"></h1>
+    <ul>
+      <li id="x-coord"></li> 
+      <li id="y-coord"></li> 
+      <li id="rotation"></li> 
+      <li id="scale"></li> 
+    </ul>
+  </div>
 
   <script type="x-shader" id="vShader">
     precision highp float;

@@ -24,8 +24,6 @@ function Program (gl, vs, fs) {
   gl.attachShader(program, vs)
   gl.attachShader(program, fs)
   gl.linkProgram(program)
-  //TODO: not sure if should do this here...
-  gl.useProgram(program)
 
   numAttributes = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES)
   numUniforms   = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS)

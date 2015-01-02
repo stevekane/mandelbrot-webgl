@@ -7,6 +7,14 @@ function copy (obj) {
   return c
 }
 
+function loadImage (path, cb) {
+  var image = new Image
+
+  image.onload  = function () { cb(null, image) }
+  image.onerror = function (e) { cb(e) }
+  image.src     = path
+}
+
 function Mat3 () {
   var mat = new Float32Array(9)
 
@@ -15,4 +23,8 @@ function Mat3 () {
   mat[8] = 1
 
   return mat
+}
+
+function computed (obj, propName, fn) {
+  Object.defineProperty(obj, propName, {get: fn}) 
 }

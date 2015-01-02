@@ -22,23 +22,21 @@ body {
 }
 
 .floating {
-  position: absolute;
-}
-
-#title {
   left: 10%;
   top: 10%;
-  font-family: ‘Palatino Linotype’, ‘Book Antiqua’, Palatino, serif;
+  position: absolute;
+  font-family: "Lucida Console", Monaco, monospace;
   font-weight: 100;
-  font-size: 44px;
   color: white;
 }
 
-#todo {
-  right: 10%;
-  top: 10%;
-  font-family: ‘Palatino Linotype’, ‘Book Antiqua’, Palatino, serif;
-  font-weight: 100;
-  font-size: 32px;
-  color: white;
+.floating h1 {
+  font-size: 44px;
+}
+
+.floating ul {
+  margin: 0px;
+  padding: 0px;
+  list-style-type: none;
+  font-size: 20px;
 }

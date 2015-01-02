@@ -10,12 +10,12 @@ function Timeline (frames) {
   this.oldIndex = 0
   this.timeLeft = frames[0].duration
 
-  Object.defineProperty(this, "currentFrame", {
-    get: function () { return this.frames[this.index] }
+  computed(this, "currentFrame", function () {
+    return this.frames[this.index]
   })
 
-  Object.defineProperty(this, "previousFrame", {
-    get: function () { return this.frames[this.oldIndex] } 
+  computed(this, "previousFrame", function () {
+    return this.frames[this.oldIndex]
   })
 }
 
@@ -43,7 +43,6 @@ function tweenTimeline (timeline, startVal, endVal) {
   return fn(timeLeft, totalTime, startVal, endVal)
 }
 
-//linear easing function
 function linear (timeLeft, totalTime, startVal, endVal) {
   return ((totalTime - timeLeft) / totalTime) * (endVal - startVal) + startVal
 }
