@@ -59,19 +59,6 @@ function Scope (initialLocation) {
     center[7] = this.location.y
     return center
   })
-
-  computed(this, "scaleDiff", function () { 
-    return this.target.scale - this.location.scale
-  })
-  computed(this, "thetaDiff", function () { 
-    return this.target.theta - this.location.theta
-  })
-  computed(this, "xDiff", function () {
-    return this.target.x - this.location.x
-  })
-  computed(this, "yDiff", function () { 
-    return this.target.y - this.location.y
-  })
 }
 
 var locations = {
@@ -113,8 +100,8 @@ var frames = [
 
 var timeline = new Timeline(frames)
 
-function updateGUI (loc) {
-  locInfo.name.textContent     = loc.name
+function updateGUI (loc, target) {
+  locInfo.name.textContent     = target.name
   locInfo.x.textContent        = "x: " + loc.x.toPrecision(4)
   locInfo.y.textContent        = "y: " + loc.y.toPrecision(4)
   locInfo.rotation.textContent = "theta: " + loc.theta.toPrecision(4)
@@ -170,7 +157,7 @@ function makeRender () {
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image)
   program.updateBuffer(gl, "a_position", 2, quadVerts)
   return function render () {
-    updateGUI(scope.location)
+    updateGUI(scope.location, scope.target)
     gl.uniform2f(screenSizeLoc, gl.drawingBufferWidth, gl.drawingBufferHeight)
     gl.uniformMatrix3fv(centerLoc, gl.FALSE, scope.center)
     gl.uniformMatrix3fv(zoomScaleLoc, gl.FALSE, scope.zoomScale)
