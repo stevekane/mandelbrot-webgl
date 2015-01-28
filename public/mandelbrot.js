@@ -140,12 +140,28 @@ function makeUpdate () {
   }
 }
 
+function updateFragScale (mat, x, y) {
+  mat[0] = 1.0 / y
+  mat[4] = 1.0 / y
+  return mat
+}
+
+function updateClipTranslation (mat, ratio) {
+  mat[6] = -0.5 * ratio
+  mat[7] = -0.5
+  return mat
+}
+
 
 function makeRender () {
-  var screenSizeLoc = program.uniforms.screenSize
-  var centerLoc     = program.uniforms.center
-  var zoomScaleLoc  = program.uniforms.zoomScale
-  var rotationLoc   = program.uniforms.rotation
+  var centerLoc       = program.uniforms.center
+  var zoomScaleLoc    = program.uniforms.zoomScale
+  var rotationLoc     = program.uniforms.rotation
+  var fragScaleLoc    = program.uniforms.fragScale
+  var clipTransLoc    = program.uniforms.clipTranslation
+  var transformMat    = Mat3()
+  var fragScale       = Mat3()
+  var clipTranslation = Mat3()
 
   gl.enable(gl.BLEND)
   gl.enable(gl.CULL_FACE)
@@ -156,12 +172,21 @@ function makeRender () {
   gl.bindTexture(gl.TEXTURE_2D, texture)
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image)
   program.updateBuffer(gl, "a_position", 2, quadVerts)
+
   return function render () {
+    var width  = gl.drawingBufferWidth
+    var height = gl.drawingBufferHeight
+    var ratio  = width / height
+
+    updateFragScale(fragScale, width, height)
+    updateClipTranslation(clipTranslation, ratio)
     updateGUI(scope.location, scope.target)
-    gl.uniform2f(screenSizeLoc, gl.drawingBufferWidth, gl.drawingBufferHeight)
+
     gl.uniformMatrix3fv(centerLoc, gl.FALSE, scope.center)
     gl.uniformMatrix3fv(zoomScaleLoc, gl.FALSE, scope.zoomScale)
     gl.uniformMatrix3fv(rotationLoc, gl.FALSE, scope.rotation)
+    gl.uniformMatrix3fv(fragScaleLoc, gl.FALSE, fragScale)
+    gl.uniformMatrix3fv(clipTransLoc, gl.FALSE, clipTranslation)
     gl.drawArrays(gl.TRIANGLES, 0, 6)
     requestAnimationFrame(render) 
   }

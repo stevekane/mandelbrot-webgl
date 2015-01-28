@@ -28,24 +28,13 @@
     precision highp float;
 
     uniform sampler2D u_image;
-    uniform vec2 screenSize;
     uniform mat3 zoomScale;
     uniform mat3 rotation;
     uniform mat3 center;
+    uniform mat3 fragScale;
+    uniform mat3 clipTranslation;
 
     void main () {
-      float xyRatio = screenSize.x / screenSize.y;
-
-      mat3 fragScale = mat3(
-        1.0 / screenSize.y , 0                 , 0,
-        0                  , 1.0 / screenSize.y, 0,
-        0                  , 0                 , 1.0
-      );
-      mat3 clipTranslation = mat3(
-        1             ,    0, 0,
-        0             ,    1, 0,
-        -0.5 * xyRatio, -0.5, 1
-      );
       vec3 c =
         center * 
         zoomScale * 
@@ -55,11 +44,14 @@
         vec3(gl_FragCoord.xy, 1);
       vec3 z;
 
-      int j = 0;
-      z = c;
-      for ( int i = 0; i < 100; i++ ) {
-        float x = (z.x * z.x - z.y * z.y) + c.x;
-        float y = (z.y * z.x + z.x * z.y) + c.y;
+      float j = 0.0;
+      float x = 0.0;
+      float y = 0.0;
+      z       = c;
+
+      for ( float i = 0.0; i < 100.0; i++ ) {
+        x = (z.x * z.x - z.y * z.y) + c.x;
+        y = (z.y * z.x + z.x * z.y) + c.y;
 
         j = i;
         if ((x * x + y * y) > 4.0) break;
@@ -67,7 +59,7 @@
         z.y = y;
       }
 
-      float mult = j == 100 ? 0.0 : (float(j) / 100.0);
+      float mult = j == 100.0 ? 0.0 : (j / 100.0);
 
       gl_FragColor = texture2D(u_image, vec2(mult, 1.0));
     }
